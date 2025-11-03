@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
             timeTaken = Time.timeSinceLevelLoad;
             winTextObject.GetComponent<TMP_Text>().text = $"You Win!\nTime: {timeTaken:0.00}s";
             winTextObject.SetActive(true);
+            Destroy(GameObject.FindGameObjectWithTag("Enemy"));
             
         }
     }
@@ -51,7 +52,7 @@ public class PlayerController : MonoBehaviour
         Vector3 movement = new Vector3(movementX, 0.0f, movementY);
         rb.AddForce(movement * speed);
     }
-    
+
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("PickUp"))
@@ -59,6 +60,30 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             count = count + 1;
             SetCountText();
+        }
+    }
+    
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Destroy(gameObject);
+            winTextObject.GetComponent<TMP_Text>().text = "You Lose!";
+            winTextObject.SetActive(true);
+            // Reset player position
+            
+            
+
+            // Reset count and reactivate pickups
+            /*
+            count = 0;
+            SetCountText();
+            GameObject[] pickups = GameObject.FindGameObjectsWithTag("PickUp");
+            foreach (GameObject pickup in pickups)
+            {
+                pickup.SetActive(true);
+            }
+            */
         }
     }
 }
